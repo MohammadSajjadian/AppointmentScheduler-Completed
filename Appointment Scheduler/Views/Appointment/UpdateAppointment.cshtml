@@ -1,0 +1,44 @@
+﻿
+@{
+    ViewData["Title"] = "UpdateAppointment";
+}
+
+@model Appointment
+
+<div class="container">
+    <div>
+        <form asp-action="UpdateAppointmentConfirm" asp-route-appointmentId="@Model.id">
+            <div class="form-group">
+                <label>تاریخ:</label>
+                <input class="form-control" value="@Model.time" name="time" type="datetime-local" required />
+            </div>
+            <div class="form-group">
+                <label>توضیحات: (اختیاری)</label>
+                <textarea class="form-control" name="description">@Model.description</textarea>
+            </div>
+            <div>
+                <button id="mainInsert" hidden></button>
+            </div>
+        </form>
+    </div>
+    <button id="subInsert" class="btn btn-outline-success">ویرایش</button>
+</div>
+<script>
+    $(function () {
+        $(subInsert).click(function () {
+            Swal.fire({
+                icon: 'question',
+                title: 'ویرایش قرار ملاقات',
+                text: 'قرار مورد نظر ویرایش شود؟',
+                confirmButtonText: 'بله',
+                showDenyButton: true,
+                denyButtonText: 'خیر'
+
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $(mainInsert).click()
+                }
+            })
+        })
+    })
+</script>

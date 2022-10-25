@@ -1,0 +1,67 @@
+﻿
+@{
+    ViewData["Title"] = "SearchAppointment";
+}
+
+@model List<Appointment>
+
+<div>
+    @if (Model.Count != 0)
+    {
+        <h3>لیست قرار ها</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">تاریخ</th>
+                    <th scope="col">توضیحات</th>
+                    <th scope="col">عملیات</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{ int i = 1;}
+
+                @{PersianCalendar persian = new();}
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <th scope="row">@(i++)</th>
+                        <td>@($"تاریخ {persian.GetYear(item.time)}/{persian.GetMonth(item.time)}/{persian.GetDayOfMonth(item.time)} - ساعت {persian.GetHour(item.time)}:{persian.GetMinute(item.time)}")</td>
+                        <td>@(item.description != null ? item.description : "-")</td>
+                        <td>
+                            <button class="btn btn-outline-danger" id="deleteBtn" appointmentId="@item.id">حذف</button>
+                            <a class="btn btn-outline-warning  offset-1" asp-action="UpdateAppointment" asp-controller="Appointment" asp-route-appointmentId="@item.id">ویرایش</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <h3>وقت ملاقاتی جهت نمایش وجود ندارد</h3>
+    }
+</div>
+
+<script>
+    $(function () {
+        $(deleteBtn).click(function () {
+            var appointmentId = $(this).attr('appointmentId');
+
+            Swal.fire({
+                icon: 'warning',
+                title: 'حذف قرار ملاقات',
+                text: 'قرار مورد نظر حذف شود؟',
+                confirmButtonText: 'بله',
+                showDenyButton: true,
+                denyButtonText: 'خیر'
+
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location = `/Appointment/DeleteAppointment?appointmentId=${appointmentId}`;
+                }
+            })
+        })
+    })
+</script>
