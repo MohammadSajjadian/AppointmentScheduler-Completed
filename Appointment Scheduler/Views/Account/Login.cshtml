@@ -1,0 +1,30 @@
+﻿
+@{
+    ViewData["Title"] = "Login";
+}
+
+@model LoginViewModel
+
+<div class="container">
+    <form asp-action="LoginConfirm">
+        <div class="form-group">
+            <label>شماره تلفن:</label>
+            <input class="form-control" asp-for="@Model.phoneNumber" />
+            <span asp-validation-for="@Model.phoneNumber"></span>
+        </div>
+        <div class="form-group">
+            <label>رمز عبور:</label>
+            <input class="form-control" asp-for="@Model.password" />
+            <span asp-validation-for="@Model.password"></span>
+        </div>
+        <div class="form-check" style="margin-bottom: 15px">
+            <input class="form-check-input me-2" type="checkbox" asp-for="@Model.rememberMe" />
+            <label class="form-check-label" >
+                مرا به خاطر بسپار
+            </label>
+        </div>
+        <div>
+            <button class="btn btn-outline-success">ورود</button>
+        </div>
+    </form>
+</div>

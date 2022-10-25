@@ -6,6 +6,14 @@
     <title>@ViewData["Title"] - Appointment_Scheduler</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        .field-validation-error {
+            color: red
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -18,12 +26,27 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+                        @if (User.Identity.IsAuthenticated == false)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Register">Register</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Appointment" asp-action="InsertAppointment">InsertAppointment</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Appointment" asp-action="AppointmentList">List of appointments</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Account" asp-action="LogOut">SignOut</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
@@ -37,12 +60,59 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2022 - Appointment_Scheduler - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2022 - Appointment_Scheduler
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
 </body>
 </html>
+
+@if (TempData["error"] != null)
+{
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'خطا!',
+            text: '@Html.Raw(TempData["error"])',
+            confirmButtonText: 'باشه',
+        })
+    </script>
+}
+
+@if (TempData["success"] != null)
+{
+    <script>
+        Swal.fire({
+            icon: 'success',
+            text: '@Html.Raw(TempData["success"])',
+            confirmButtonText: 'باشه',
+        })
+    </script>
+}
+
+@if (TempData["info"] != null)
+{
+    <script>
+        Swal.fire({
+            icon: 'info',
+            title: 'پبغام',
+            text: '@Html.Raw(TempData["info"])',
+            confirmButtonText: 'باشه',
+        })
+    </script>
+}
+
+@if (TempData["warning"] != null)
+{
+    <script>
+        Swal.fire({
+            icon: 'warning',
+            title: 'اخطار',
+            text: '@Html.Raw(TempData["warning"])',
+            confirmButtonText: 'باشه',
+        })
+    </script>
+}

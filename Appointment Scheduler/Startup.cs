@@ -31,6 +31,11 @@ namespace Appointment_Scheduler
             {
                 x.UseSqlServer(Configuration.GetConnectionString("DBscheduler"));
             });
+
+            services.ConfigureApplicationCookie(x =>
+            {
+                x.LoginPath = "/Account/Login";
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -46,9 +51,10 @@ namespace Appointment_Scheduler
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

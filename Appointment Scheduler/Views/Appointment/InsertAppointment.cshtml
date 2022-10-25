@@ -1,0 +1,45 @@
+﻿
+@{
+    ViewData["Title"] = "InsertAppointment";
+}
+
+@model AppointmentViewModel
+
+<div class="container">
+    <div>
+        <form asp-action="InsertAppointmentConfirm">
+            <div class="form-group">
+                <label>تاریخ:</label>
+                <input class="form-control" asp-for="@Model.time" type="datetime-local" />
+                <span asp-validation-for="@Model.time"></span>
+            </div>
+            <div class="form-group">
+                <label>توضیحات: (اختیاری)</label>
+                <textarea class="form-control" asp-for="@Model.description"></textarea>
+            </div>
+            <div>
+                <button id="mainInsert" hidden></button>
+            </div>
+        </form>
+    </div>
+    <button id="subInsert" class="btn btn-outline-success">ثبت</button>
+</div>
+<script>
+    $(function () {
+        $(subInsert).click(function () {
+            Swal.fire({
+                icon: 'question',
+                title: 'ثبت قرار ملاقات',
+                text: 'قرار مورد نظر ثبت شود؟',
+                confirmButtonText: 'بله',
+                showDenyButton: true,
+                denyButtonText: 'خیر'
+
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $(mainInsert).click()
+                }
+            })
+        })
+    })
+</script>
