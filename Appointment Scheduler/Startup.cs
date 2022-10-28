@@ -6,6 +6,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Quartz;
+using Quartz.Impl;
+using Quartz.Spi;
+using Services.Job;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,6 +40,16 @@ namespace Appointment_Scheduler
             {
                 x.LoginPath = "/Account/Login";
             });
+
+            #region Quartz
+
+            services.AddSingleton<IJobFactory, SchedulerFactory>();
+            services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
+            services.AddSingleton<SmsJob>();
+            services.AddSingleton(new JobSchedule(_jobType: typeof(SmsJob), _cronExpression: "0 0/1 * * * ?"));
+            services.AddHostedService<QuartzHostedService>();
+
+            #endregion
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

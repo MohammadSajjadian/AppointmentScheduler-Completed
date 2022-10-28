@@ -1,8 +1,13 @@
-﻿using Appointment_Scheduler.Data;
+﻿using Appointment_Scheduler.Areas.Identity.Data;
+using Appointment_Scheduler.Data;
 using Data.Entities;
 using Data.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Quartz;
+using Quartz.Spi;
+using Services.Job;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,9 +29,12 @@ namespace Appointment_Scheduler.Controllers
         #region Dependency Injection
 
         private readonly DBscheduler db;
-        public AppointmentController(DBscheduler _db)
+        private readonly UserManager<ApplicationUser> userManager;
+
+        public AppointmentController(DBscheduler _db, UserManager<ApplicationUser> _userManager)
         {
             db = _db;
+            userManager = _userManager;
         }
 
         #endregion
@@ -42,19 +50,22 @@ namespace Appointment_Scheduler.Controllers
         [Authorize]
         public IActionResult AppointmentList()
         {
-            return View(db.appointments.ToList());
+            return View(db.appointments.OrderBy(x => x.time).ToList());
         }
 
 
         [Authorize]
-        public IActionResult InsertAppointmentConfirm(AppointmentViewModel model)
+        public async Task<IActionResult> InsertAppointmentConfirm(AppointmentViewModel model)
         {
             try
             {
+                ApplicationUser user = await userManager.FindByNameAsync(User.Identity.Name);
+
                 Appointment appointment = new()
                 {
                     time = model.time,
-                    description = model.description
+                    description = model.description,
+                    userId = user.Id
                 };
 
                 db.Add(appointment);
