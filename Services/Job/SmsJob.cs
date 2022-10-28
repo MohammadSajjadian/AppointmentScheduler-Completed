@@ -28,13 +28,13 @@ namespace Services.Job
                 {
                     #region Send SMS
 
-                    var token = new Token().GetToken("42f2ea6a34b93ff4dca9be13", "cxf9uY#%+zfU@^VF");
+                    var token = new Token().GetToken("-", "-");
 
                     var messageSendObject = new MessageSendObject()
                     {
                         Messages = new List<string> { $"قرار شما فرا رسید!\n'{item.description}'" }.ToArray(),
                         MobileNumbers = new List<string> { item.applicationUser.PhoneNumber }.ToArray(),
-                        LineNumber = "30005680000578",
+                        LineNumber = "-",
                         SendDateTime = DateTime.Now,
                         CanContinueInCaseOfError = false,
                     };
